@@ -1,0 +1,38 @@
+# Staging area — not part of the published plugin
+incoming/
+
+# Claude Code session artifacts
+.claude/logs/
+.claude/worktrees/
+
+# OS / editor
+.DS_Store
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.hypothesis/
+.coverage
+htmlcov/
+
+# shadow_mirror engine: transient mutation recovery sidecars (a leftover one means
+# a crashed/interrupted run; restored automatically on the next run when provable)
+*.sm-recovery
+*.sm-recovery.tmp*
+
+# Demo / mutmut run artifacts (the container demo mutates the sample in place)
+mutants/
+.mutmut-cache
+mutmut-stats.json
+demo.log
+.benchmarks/
+
+# JS adapter / conformance fixture (node deps not committed; installed per-env)
+node_modules/
+coverage/
+coverage-final.json
+*.sm-attrib.json

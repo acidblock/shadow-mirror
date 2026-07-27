@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "shadow-mirror",
+  "displayName": "Shadow Mirror",
+  "version": "0.2.0",
+  "description": "Referential introspection for test planning and coverage mapping. Runs the seven-phase scientific-validation loop (SM-0 Hypothesize .. SM-6 Iterate) to prove correctness, plan tests, and surface the semantic-coverage blind spots that line coverage hides.",
+  "author": {
+    "name": "acidblock"
+  },
+  "homepage": "https://github.com/acidblock/shadow-mirror",
+  "repository": "https://github.com/acidblock/shadow-mirror",
+  "license": "Apache-2.0",
+  "keywords": [
+    "testing",
+    "coverage",
+    "test-planning",
+    "validation",
+    "multi-language",
+    "pytest",
+    "vitest",
+    "javascript",
+    "typescript",
+    "playwright",
+    "ebpf",
+    "scientific-method"
+  ]
+}

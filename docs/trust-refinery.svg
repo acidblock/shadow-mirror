@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 470" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" role="img" aria-label="Shadow Mirror — the trust refinery. A raw symptom is refined through seven phases SM-0 to SM-6 into a trusted evidence receipt; SM-6 iterates back to SM-0.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+    </marker>
+    <linearGradient id="trust" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6b7280"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="1" y="1" width="1198" height="468" rx="16" fill="#ffffff" stroke="#e5e7eb"/>
+
+  <!-- titles -->
+  <text x="600" y="50" text-anchor="middle" font-size="30" font-weight="700" fill="#0f172a">Shadow Mirror</text>
+  <text x="600" y="78" text-anchor="middle" font-size="17" font-weight="600" fill="#10b981" letter-spacing="1.5">THE TRUST REFINERY</text>
+  <text x="600" y="104" text-anchor="middle" font-size="12.5" fill="#64748b">shadows (instrumented traces) in&#160;&#160;→&#160;&#160;mirrors (assertions)&#160;&#160;→&#160;&#160;trusted evidence out</text>
+
+  <!-- input capsule (crude) -->
+  <rect x="30" y="160" width="120" height="80" rx="12" fill="#6b7280"/>
+  <text x="90" y="195" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">Symptom /</text>
+  <text x="90" y="214" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">uncertainty</text>
+  <text x="90" y="232" text-anchor="middle" font-size="10.5" fill="#e5e7eb" letter-spacing="1">CRUDE INPUT</text>
+
+  <!-- phase chips -->
+  <g font-weight="600" fill="#ffffff" text-anchor="middle">
+    <g><rect x="180" y="160" width="108" height="80" rx="12" fill="#6b7280"/>
+       <text x="234" y="196" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">SM-0</text>
+       <text x="234" y="217" font-size="12.5">Hypothesize</text></g>
+    <g><rect x="300" y="160" width="108" height="80" rx="12" fill="#5e7e93"/>
+       <text x="354" y="196" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">SM-1</text>
+       <text x="354" y="217" font-size="12.5">Instrument</text></g>
+    <g><rect x="420" y="160" width="108" height="80" rx="12" fill="#4f8aa4"/>
+       <text x="474" y="196" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">SM-2</text>
+       <text x="474" y="217" font-size="12.5">Assert</text></g>
+    <g><rect x="540" y="160" width="108" height="80" rx="12" fill="#3f97b2"/>
+       <text x="594" y="196" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">SM-3</text>
+       <text x="594" y="217" font-size="12.5">Execute</text></g>
+    <g><rect x="660" y="160" width="108" height="80" rx="12" fill="#2ba9aa"/>
+       <text x="714" y="196" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">SM-4</text>
+       <text x="714" y="217" font-size="12.5">Document</text></g>
+    <g><rect x="780" y="160" width="108" height="80" rx="12" fill="#1bbd9c"/>
+       <text x="834" y="196" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">SM-5</text>
+       <text x="834" y="217" font-size="12.5">Review</text></g>
+    <g><rect x="900" y="160" width="108" height="80" rx="12" fill="#10b981"/>
+       <text x="954" y="196" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">SM-6</text>
+       <text x="954" y="217" font-size="12.5">Iterate</text></g>
+  </g>
+
+  <!-- output capsule (refined) -->
+  <rect x="1040" y="160" width="130" height="80" rx="12" fill="#10b981"/>
+  <text x="1105" y="195" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">ReceiptV1</text>
+  <text x="1105" y="214" text-anchor="middle" font-size="12" fill="#ffffff">trusted evidence</text>
+  <text x="1105" y="232" text-anchor="middle" font-size="10.5" fill="#d1fae5" letter-spacing="1">REFINED OUTPUT</text>
+
+  <!-- flow arrows -->
+  <g stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="152" y1="200" x2="178" y2="200"/>
+    <line x1="290" y1="200" x2="298" y2="200"/>
+    <line x1="410" y1="200" x2="418" y2="200"/>
+    <line x1="530" y1="200" x2="538" y2="200"/>
+    <line x1="650" y1="200" x2="658" y2="200"/>
+    <line x1="770" y1="200" x2="778" y2="200"/>
+    <line x1="890" y1="200" x2="898" y2="200"/>
+    <line x1="1010" y1="200" x2="1038" y2="200"/>
+  </g>
+
+  <!-- trust gradient rail -->
+  <rect x="180" y="262" width="828" height="9" rx="4.5" fill="url(#trust)"/>
+  <text x="180" y="290" font-size="11" fill="#6b7280">lower trust</text>
+  <text x="1008" y="290" text-anchor="end" font-size="11" fill="#10b981" font-weight="600">higher trust</text>
+
+  <!-- iterate feedback loop SM-6 -> SM-0 -->
+  <path d="M 954 300 C 954 420, 234 420, 234 304" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <line x1="954" y1="271" x2="954" y2="300" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="3 4"/>
+  <text x="594" y="410" text-anchor="middle" font-size="12" fill="#64748b">SM-6 · iterate — refine &amp; loop back to SM-0, or declare done</text>
+
+  <!-- caption -->
+  <text x="600" y="452" text-anchor="middle" font-size="11.5" fill="#94a3b8">a falsifiable claim enters; an immutable, content-addressable receipt leaves — each phase removes a little more doubt</text>
+</svg>

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "shadow-mirror": {
+      "command": "${CLAUDE_PLUGIN_DATA}/mcp-venv/bin/python",
+      "args": ["-m", "shadow_mirror.mcp_server"],
+      "env": { "PYTHONUNBUFFERED": "1" }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Shadow Mirror demo",
+  "build": {
+    "dockerfile": "../docker/Dockerfile",
+    "context": ".."
+  },
+  "overrideCommand": true,
+  "workspaceFolder": "/work",
+  "postAttachCommand": "echo 'Run the demo:  bash /work/demo.sh'"
+}
