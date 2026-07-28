@@ -6,13 +6,16 @@ required *tools*, invoked out-of-process.
 
 from __future__ import annotations
 
+import atexit
 import base64
 import hashlib
 import json
 import os
+import signal
 import subprocess
 import sys
 import tempfile
+import threading
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
@@ -99,6 +102,82 @@ def _self_heal(target: Path, rec_path: Path) -> None:
             f"shadow_mirror: {target} was modified after an interrupted run (it "
             f"matches neither the saved original nor the expected mutant). The "
             f"original is preserved in {rec_path}; resolve it manually before re-running.")
+
+
+# --- emergency unwind: restore in-flight mutations on termination ------------
+#
+# ``finally`` covers KeyboardInterrupt, and the recovery sidecar covers SIGKILL
+# via the *next run's* self-heal. The gap between them is termination that skips
+# ``finally`` when there may never be a next run: SIGTERM (a harness timeout, a
+# killed CI step) and ``sys.exit`` from an outer frame — observed in the field as
+# a target left mutated for days until it surfaced in an unrelated diff. The
+# unwind below restores in THIS process, before death. Handlers are installed
+# only while a mutation is in flight and chain to whatever was there, so the
+# engine never permanently owns the host's signal disposition (the MCP server
+# and library embedders keep theirs).
+
+_active: dict[str, tuple[bytes, Path]] = {}  # resolved target -> (original, record)
+_guard_lock = threading.Lock()
+_guard_depth = 0
+_prev_handlers: dict[int, object] = {}
+_atexit_installed = False
+_UNWIND_SIGNALS = (signal.SIGINT, signal.SIGTERM)
+
+
+def _restore_active(*_ignored: object) -> None:
+    """Write back every in-flight original. Idempotent — safe from a signal
+    handler, from atexit, and concurrently with the normal ``finally`` unwind.
+    If a write fails the sidecar record stays, so next-run self-heal still applies."""
+    for key, (original, rec_path) in list(_active.items()):
+        if _active.pop(key, None) is None:
+            continue  # another unwinder got here first
+        try:
+            Path(key).write_bytes(original)
+            rec_path.unlink(missing_ok=True)
+        except OSError:  # pragma: no cover - restore failed; sidecar remains
+            pass
+
+
+def _unwind_handler(signum: int, frame: object) -> None:
+    _restore_active()
+    prev = _prev_handlers.get(signum)
+    if callable(prev):
+        prev(signum, frame)  # chain (default SIGINT raises KeyboardInterrupt here)
+    elif prev is not signal.SIG_IGN:
+        signal.signal(signum, signal.SIG_DFL)  # re-deliver for true default
+        os.kill(os.getpid(), signum)  # semantics: exit status = death-by-signal
+
+
+@contextmanager
+def _unwind_on_termination():
+    """Scoped installation of the emergency unwind. Refcounted so nested/threaded
+    windows share one installation; signal handlers only from the main thread
+    (elsewhere the atexit hook and the sidecar remain the backstop)."""
+    global _guard_depth, _atexit_installed
+    with _guard_lock:
+        if not _atexit_installed:
+            atexit.register(_restore_active)
+            _atexit_installed = True
+        _guard_depth += 1
+        if _guard_depth == 1 and threading.current_thread() is threading.main_thread():
+            for sig in _UNWIND_SIGNALS:
+                try:
+                    _prev_handlers[sig] = signal.signal(sig, _unwind_handler)
+                except (ValueError, OSError):  # pragma: no cover - exotic host
+                    pass
+    try:
+        yield
+    finally:
+        with _guard_lock:
+            _guard_depth -= 1
+            if _guard_depth == 0 and _prev_handlers:
+                for sig, prev in _prev_handlers.items():
+                    try:  # a None prev is a non-Python (C-level) handler we cannot
+                        # reinstall — reset to default rather than keep ours alive
+                        signal.signal(sig, prev if prev is not None else signal.SIG_DFL)
+                    except (ValueError, OSError):  # pragma: no cover - exotic host
+                        pass
+                _prev_handlers.clear()
 
 
 @dataclass(frozen=True)
@@ -219,6 +298,11 @@ def mutated_file(path: str, new_source: str):
        recovery sidecar (written *before* the mutant, holding the original bytes +
        the expected mutant hash) lets the next run restore it — but only when the
        file is provably that mutant, never clobbering an intervening user edit.
+    3. **Terminating signal** — SIGTERM (harness timeout, killed CI step) skips
+       ``finally`` too, and unlike SIGKILL it is catchable: a scoped handler
+       restores the original *in this process, before death*, then chains to the
+       prior disposition — no dependence on a next run ever happening. An atexit
+       hook covers ``sys.exit`` from an outer frame the same way.
 
     Invariant: under the lock the file is always either the original (record
     optional) or the mutant (record present) — never mutated without a record.
@@ -230,13 +314,17 @@ def mutated_file(path: str, new_source: str):
         _self_heal(target, rec_path)  # after lock, before reading the (true) original
         original = target.read_bytes()
         _write_recovery(rec_path, original, hashlib.sha256(mutant_bytes).hexdigest())
-        try:
-            target.write_bytes(mutant_bytes)
-            yield
-        finally:
-            target.write_bytes(original)
-            if target.read_bytes() != original:  # verified restore — fail loud, keep record
-                raise RuntimeError(
-                    f"shadow_mirror: failed to restore {target} to its original bytes; "
-                    f"the original is preserved in {rec_path}.")
-            rec_path.unlink(missing_ok=True)
+        key = str(target.resolve())
+        with _unwind_on_termination():
+            _active[key] = (original, rec_path)  # registered before the mutant lands
+            try:
+                target.write_bytes(mutant_bytes)
+                yield
+            finally:
+                if _active.pop(key, None) is not None:  # emergency unwind may have run
+                    target.write_bytes(original)
+                    if target.read_bytes() != original:  # verified restore — fail loud
+                        raise RuntimeError(
+                            f"shadow_mirror: failed to restore {target} to its original "
+                            f"bytes; the original is preserved in {rec_path}.")
+                    rec_path.unlink(missing_ok=True)
