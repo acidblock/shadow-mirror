@@ -11,7 +11,7 @@
       "name": "shadow-mirror",
       "source": "./plugin",
       "description": "Run the seven-phase scientific-validation loop (SM-0..SM-6) to prove correctness, plan tests, and map the semantic coverage that line coverage hides. Ships a skill, a /shadow-mirror command, a validation subagent, the `sm` engine (map/plan/verify/delta), and an MCP server.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "license": "Apache-2.0",
       "keywords": ["testing", "coverage", "test-planning", "validation", "mcp"]
     }
