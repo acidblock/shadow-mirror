@@ -17,7 +17,7 @@ set -euo pipefail
 DATA="${CLAUDE_PLUGIN_DATA:-${XDG_CACHE_HOME:-$HOME/.cache}/shadow-mirror-plugin}"
 VENV="$DATA/mcp-venv"
 # Override to pin a ref/fork, or point at a local checkout for development, e.g.
-#   SHADOW_MIRROR_PIP="shadow-mirror[mcp,engine] @ git+https://github.com/acidblock/shadow-mirror.git@v0.2.0"
+#   SHADOW_MIRROR_PIP="shadow-mirror[mcp,engine] @ git+https://github.com/acidblock/shadow-mirror.git@v0.2.1"
 PIP_SPEC="${SHADOW_MIRROR_PIP:-shadow-mirror[mcp,engine] @ git+https://github.com/acidblock/shadow-mirror.git}"
 
 mkdir -p "$DATA"
