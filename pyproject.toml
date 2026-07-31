@@ -25,7 +25,9 @@ dynamic = ["version"]
 [project.optional-dependencies]
 engine = ["coverage>=7", "pytest>=7"]
 test = ["pytest>=7", "coverage>=7", "tomli>=2; python_version < '3.11'"]
-mcp = ["mcp>=1.0"]
+# Upper-bounded: mcp 2.0 removed the vendored FastMCP (`mcp.server.fastmcp`)
+# that mcp_server.py is written against. Migration to 2.x is tracked in issues.
+mcp = ["mcp>=1.0,<2"]
 # JS adapter: tree-sitter parses source in-process; vitest/Istanbul are consumed
 # out-of-process (npx) in the target project, so they are not Python deps.
 js = ["tree-sitter>=0.23", "tree-sitter-javascript>=0.23"]
