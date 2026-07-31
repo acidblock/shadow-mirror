@@ -1,0 +1,61 @@
+name: Bug report
+description: Something gave a wrong verdict, crashed, or damaged files
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. The fastest path to a fix is the exact triple the
+        engine needs to replay your case: the module, the tests, and the command.
+        Security-sensitive? Use [private reporting](https://github.com/acidblock/shadow-mirror/security/advisories/new) instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you run and what went wrong? A wrong verdict, a crash, files left modified, ...
+      placeholder: "`sm map` reported gap-unexercised for a branch my suite provably exercises ..."
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: >
+        The smallest module + test file that shows the problem, plus the exact
+        command. If you can't minimize, the real command plus `--json` output
+        still helps.
+      value: |
+        ```bash
+        sm map path/to/module.py --tests path/to/test_module.py
+        ```
+
+        ```python
+        # module (trimmed)
+        ```
+
+        ```python
+        # tests (trimmed)
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+      description: What verdict/behavior did you expect, and what did you get? Paste the table or `--json` cell if it's a verdict question.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, shadow-mirror version, target language, and (for JS/TS/TSX) node/vitest versions.
+      placeholder: |
+        macOS 15 / Python 3.12 / shadow-mirror 0.2.0 / --lang python
+    validations:
+      required: true
+  - type: textarea
+    id: verbose
+    attributes:
+      label: Verbose output (optional)
+      description: If the run misbehaves, `-vv` output shows each mutant and test selection — paste the relevant part.

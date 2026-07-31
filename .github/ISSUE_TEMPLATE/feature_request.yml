@@ -1,0 +1,36 @@
+name: Feature request
+description: Propose a capability, a new level signal, or a language target
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check [`ROADMAP.md`](https://github.com/acidblock/shadow-mirror/blob/main/ROADMAP.md)
+        first — it may already be tracked (engine gaps included), in which case a 👍 or a
+        comment there is more useful than a duplicate.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that Shadow Mirror can't express or measure today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: What should it do? For verdict-affecting proposals, say what "proven" should mean — which mutation or signal establishes it.
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Fit with the constraints
+      description: >
+        C1: core stays stdlib-only (tools are consumed out-of-process).
+        C3: zero rewrites for the target project. If the idea needs an
+        exception, argue for it explicitly (see docs/constraints.md).
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
